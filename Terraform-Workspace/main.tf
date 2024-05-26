@@ -91,9 +91,7 @@ resource "azurerm_automation_account" "az_automation_account" {
   name                = "AUTOMATION-ACCOUNT-DEMO-VM-May"
   location            = azurerm_resource_group.az_rg.location
   resource_group_name = azurerm_resource_group.az_rg.name
-  sku {
-    name = "Basic"
-  }
+  sku_name = "Basic"
 }
 
 # Log Analytics Workspace
@@ -119,7 +117,7 @@ resource "azurerm_log_analytics_solution" "az_update_management" {
 }
 resource "azurerm_virtual_machine_extension" "az_vm_extension" {
   name                 = "AZ-AGENT-DEMO-VM-May"
-  virtual_machine_id   = azurerm_virtual_machine.az_windows_vm.id
+  virtual_machine_id   = azurerm_windows_virtual_machine.az_windows_vm.id
   publisher            = "Microsoft.EnterpriseCloud.Monitoring"
   type                 = "OmsAgentForLinux"
   type_handler_version = "1.13.35"
