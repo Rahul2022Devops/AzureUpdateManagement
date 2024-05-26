@@ -104,7 +104,7 @@ resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
 }
 
 # Enable Update Management Solution
-resource "azurerm_log_analytics_solution" "az_update_management" {
+resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
   solution_name                  = "LOG-SOLUTION-DEMO-VM-May"
   location              = azurerm_resource_group.az_rg.location
   resource_group_name   = azurerm_resource_group.az_rg.name
@@ -112,7 +112,8 @@ resource "azurerm_log_analytics_solution" "az_update_management" {
   workspace_name        = azurerm_log_analytics_workspace.az_log_analytics_workspace.name
   plan {
     publisher = "Microsoft"
-    product   = "OMSGallery/Updates"
+    # product   = "OMSGallery/Updates"
+    product = "OMSGallery/AzureMonitorAgent"
   }
   depends_on = [azurerm_automation_account.az_automation_account]
 }
