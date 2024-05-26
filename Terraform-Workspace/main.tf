@@ -52,10 +52,10 @@ resource "azurerm_network_interface_security_group_association" "az_nisga" {
   network_security_group_id = azurerm_network_security_group.az_nsg.id
 }
 
-resource "azurerm_windows_virtual_machine" "example" {
+resource "azurerm_windows_virtual_machine" "az_windows_vm" {
   name                  = "DEMO-VM-May"
-  location              = azurerm_resource_group.example.location
-  resource_group_name   = azurerm_resource_group.example.name
+  location              = azurerm_resource_group.az_rg.location
+  resource_group_name   = azurerm_resource_group.az_rg.name
   size                  = "Standard_DS1_v2"
   admin_username        = "adminuser"
   admin_password        = "P@ssw0rd1234!"
@@ -63,7 +63,7 @@ resource "azurerm_windows_virtual_machine" "example" {
   availability_set_id   = azurerm_availability_set.az_av_set.id
 
   os_disk {
-    name              = "example-os-disk"
+    name              = "eaz_windows_vm-os-disk"
     caching           = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
@@ -77,7 +77,7 @@ resource "azurerm_windows_virtual_machine" "example" {
 }
 
 resource "azurerm_availability_set" "az_av_set" {
-  name                = "example-avset"
+  name                = "AZ-AV-SET-DEMO-VM-May"
   location            = azurerm_resource_group.az_rg.location
   resource_group_name = azurerm_resource_group.az_rg.name
   managed             = true
