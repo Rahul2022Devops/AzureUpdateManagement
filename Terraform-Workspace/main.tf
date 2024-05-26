@@ -1,22 +1,23 @@
+# Resource Group Creation
 resource "azurerm_resource_group" "az_rg" {
   name     = "RG-DEMO-VM-May"
   location = "centralindia"
 }
-
+# Virtual Network Creation
 resource "azurerm_virtual_network" "az_vnet" {
   name                = "VNET-DEMO-VM-May"
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.az_rg.location
   resource_group_name = azurerm_resource_group.az_rg.name
 }
-
+# Subnet Creation
 resource "azurerm_subnet" "az_subnet" {
   name                 = "SUBNET-DEMO-VM-May"
   resource_group_name  = azurerm_resource_group.az_rg.name
   virtual_network_name = azurerm_virtual_network.az_vnet.name
   address_prefixes     = ["10.0.2.0/24"]
 }
-
+# Network Interface Creation
 resource "azurerm_network_interface" "az_interface" {
   name                = "INTERFACE-DEMO-VM-May"
   location            = azurerm_resource_group.az_rg.location
@@ -28,7 +29,7 @@ resource "azurerm_network_interface" "az_interface" {
     private_ip_address_allocation = "Dynamic"
   }
 }
-
+# Network Security Group Creation
 resource "azurerm_network_security_group" "az_nsg" {
   name                = "NSG-DEMO-VM-May"
   location            = azurerm_resource_group.az_rg.location
@@ -46,12 +47,12 @@ resource "azurerm_network_security_group" "az_nsg" {
     destination_address_prefix = "*"
   }
 }
-
+# Network Security Association Creation
 resource "azurerm_network_interface_security_group_association" "az_nisga" {
   network_interface_id      = azurerm_network_interface.az_interface.id
   network_security_group_id = azurerm_network_security_group.az_nsg.id
 }
-
+# VM Creation
 resource "azurerm_windows_virtual_machine" "az_windows_vm" {
   name                  = "DEMO-VM-May"
   location              = azurerm_resource_group.az_rg.location
@@ -75,10 +76,41 @@ resource "azurerm_windows_virtual_machine" "az_windows_vm" {
     version   = "latest"
   }
 }
-
+# Availability Set Creation
 resource "azurerm_availability_set" "az_av_set" {
   name                = "AZ-AV-SET-DEMO-VM-May"
   location            = azurerm_resource_group.az_rg.location
   resource_group_name = azurerm_resource_group.az_rg.name
   managed             = true
 }
+
+
+# adding these below code for log ananlytics & Update management
+# Provider configuration
+provider "azurerm" {
+  features {}
+}
+
+# Log Analytics Workspace
+resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
+  name                = "LOG-DEMO-VM-May"
+  location            = azurerm_resource_group.az_rg.location
+  resource_group_name = azurerm_resource_group.az_rg.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30  # Adjust retention period as needed
+}
+
+# Enable Update Management Solution
+resource "azurerm_log_analytics_solution" "az_update_management" {
+  solution_name         = "LOG-SOLUTION-DEMO-VM-May"
+  location              = azurerm_resource_group.az_rg.location
+  resource_group_name   = azurerm_resource_group.az_rg.name
+  workspace_resource_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+}
+
+# Add Virtual Machines to Update Management
+resource "azurerm_update_management_vm" "az_update_management" {
+  workspace_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+  vm_ids       = [azurerm_virtual_machine.az_windows_vm.id]  # Assuming you have a VM defined elsewhere in your Terraform configuration
+}
+
