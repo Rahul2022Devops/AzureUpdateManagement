@@ -109,6 +109,7 @@ resource "azurerm_log_analytics_solution" "az_update_management" {
   location              = azurerm_resource_group.az_rg.location
   resource_group_name   = azurerm_resource_group.az_rg.name
   workspace_resource_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+  workspace_name        = azurerm_log_analytics_workspace.example.name
   plan {
     publisher = "Microsoft"
     product   = "OMSGallery/Updates"
