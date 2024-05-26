@@ -113,7 +113,7 @@ resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
   plan {
     publisher = "Microsoft"
     # product   = "OMSGallery/Updates"
-    product = "OMSGallery/AzureMonitorAgent" #explore
+    product = "OMSGallery/VMInsights" #explore
   }
   depends_on = [azurerm_automation_account.az_automation_account]
 }
