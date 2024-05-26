@@ -86,11 +86,6 @@ resource "azurerm_availability_set" "az_av_set" {
 
 
 # adding these below code for log ananlytics & Update management
-# Provider configuration
-provider "azurerm" {
-  features {}
-}
-
 # Log Analytics Workspace
 resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
   name                = "LOG-DEMO-VM-May"
