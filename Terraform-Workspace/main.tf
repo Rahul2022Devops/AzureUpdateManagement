@@ -85,28 +85,28 @@ resource "azurerm_availability_set" "az_av_set" {
 }
 
 
-# adding these below code for log ananlytics & Update management
-# Log Analytics Workspace
-resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
-  name                = "LOG-DEMO-VM-May"
-  location            = azurerm_resource_group.az_rg.location
-  resource_group_name = azurerm_resource_group.az_rg.name
-  sku                 = "PerGB2018"
-  retention_in_days   = 30  # Adjust retention period as needed
-}
+# # adding these below code for log ananlytics & Update management
+# # Log Analytics Workspace
+# resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
+#   name                = "LOG-DEMO-VM-May"
+#   location            = azurerm_resource_group.az_rg.location
+#   resource_group_name = azurerm_resource_group.az_rg.name
+#   sku                 = "PerGB2018"
+#   retention_in_days   = 30  # Adjust retention period as needed
+# }
 
-# Enable Update Management Solution
-resource "azurerm_log_analytics_solution" "az_update_management" {
-  solution_name                  = "LOG-SOLUTION-DEMO-VM-May"
-  location              = azurerm_resource_group.az_rg.location
-  resource_group_name   = azurerm_resource_group.az_rg.name
-  #workspace_resource_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
-  workspace_name        = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
-}
+# # Enable Update Management Solution
+# resource "azurerm_log_analytics_solution" "az_update_management" {
+#   solution_name                  = "LOG-SOLUTION-DEMO-VM-May"
+#   location              = azurerm_resource_group.az_rg.location
+#   resource_group_name   = azurerm_resource_group.az_rg.name
+#   #workspace_resource_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+#   workspace_name        = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+# }
 
-# Add Virtual Machines to Update Management
-resource "azurerm_update_management_vm" "az_update_management" {
-  workspace_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
-  vm_ids       = [azurerm_virtual_machine.az_windows_vm.id]  # Assuming you have a VM defined elsewhere in your Terraform configuration
-}
+# # Add Virtual Machines to Update Management
+# resource "azurerm_update_management_vm" "az_update_management" {
+#   workspace_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+#   vm_ids       = [azurerm_virtual_machine.az_windows_vm.id]  # Assuming you have a VM defined elsewhere in your Terraform configuration
+# }
 
