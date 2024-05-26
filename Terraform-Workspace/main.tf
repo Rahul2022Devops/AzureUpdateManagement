@@ -113,7 +113,7 @@ resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
   plan {
     publisher = "Microsoft"
     # product   = "OMSGallery/Updates"
-    product = "OMSGallery/AzureMonitorAgent"
+    product = "OMSGallery/AzureMonitorAgent" #explore
   }
   depends_on = [azurerm_automation_account.az_automation_account]
 }
@@ -121,7 +121,7 @@ resource "azurerm_virtual_machine_extension" "az_vm_extension" {
   name                 = "AZ-AGENT-DEMO-VM-May"
   virtual_machine_id   = azurerm_windows_virtual_machine.az_windows_vm.id
   publisher            = "Microsoft.EnterpriseCloud.Monitoring"
-  type                 = "OmsAgentForLinux"
+  type                 = "OmsAgentForLinux" #explore
   type_handler_version = "1.13.35"
   auto_upgrade_minor_version = true
 
