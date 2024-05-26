@@ -97,7 +97,7 @@ resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
 
 # Enable Update Management Solution
 resource "azurerm_log_analytics_solution" "az_update_management" {
-  name         = "LOG-SOLUTION-DEMO-VM-May"
+  name                  = "LOG-SOLUTION-DEMO-VM-May"
   location              = azurerm_resource_group.az_rg.location
   resource_group_name   = azurerm_resource_group.az_rg.name
   workspace_resource_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
