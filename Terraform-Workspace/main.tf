@@ -124,7 +124,8 @@ resource "azurerm_virtual_machine_extension" "az_vm_extension" {
   # publisher            = "Microsoft.Azure.Monitor"
   type                 = "OmsAgentForLinux" #explore
   # type                 = "DependencyAgentWindows" #explore
-  type_handler_version = "9.10"
+  # type_handler_version = "9.10"
+  type_handler_version = "1.12"
   auto_upgrade_minor_version = true
 
   settings = <<SETTINGS
