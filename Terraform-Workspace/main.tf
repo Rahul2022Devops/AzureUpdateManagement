@@ -117,6 +117,12 @@ resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
   }
   depends_on = [azurerm_automation_account.az_automation_account]
 }
+# AZ Log Analytics Linked Service Creation
+resource "azurerm_log_analytics_linked_service" "az_log_linked_service" {
+  resource_group_name = azurerm_resource_group.az_rg.name
+  workspace_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+  read_access_id = azurerm_automation_account.az_automation_account.id
+}
 resource "azurerm_virtual_machine_extension" "az_vm_extension" {
   name                 = "AZ-AGENT-DEMO-VM-May"
   virtual_machine_id   = azurerm_windows_virtual_machine.az_windows_vm.id
@@ -126,8 +132,8 @@ resource "azurerm_virtual_machine_extension" "az_vm_extension" {
   type                 = "AzureMonitorWindowsAgent" #explore
   # type_handler_version = "9.10"
   type_handler_version = "1.10"
-  auto_upgrade_minor_version = true
-
+  # auto_upgrade_minor_version = true
+  automatic_upgrade_enabled = true
   settings = <<SETTINGS
     {
       "workspaceId": "${azurerm_log_analytics_workspace.az_log_analytics_workspace.workspace_id}"
