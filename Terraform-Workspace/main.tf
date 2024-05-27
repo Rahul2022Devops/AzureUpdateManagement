@@ -120,12 +120,12 @@ resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
 resource "azurerm_virtual_machine_extension" "az_vm_extension" {
   name                 = "AZ-AGENT-DEMO-VM-May"
   virtual_machine_id   = azurerm_windows_virtual_machine.az_windows_vm.id
-  publisher            = "Microsoft.EnterpriseCloud.Monitoring"
+  publisher            = "Microsoft.Azure.Monitor"
   # publisher            = "Microsoft.Azure.Monitor"
-  type                 = "OmsAgentForLinux" #explore
-  # type                 = "DependencyAgentWindows" #explore
+  # type                 = "OmsAgentForLinux" #explore
+  type                 = "AzureMonitorWindowsAgent" #explore
   # type_handler_version = "9.10"
-  type_handler_version = "1.12"
+  type_handler_version = "1.10"
   auto_upgrade_minor_version = true
 
   settings = <<SETTINGS
