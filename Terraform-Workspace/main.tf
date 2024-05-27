@@ -119,7 +119,7 @@ resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
 }
 # AZ Log Analytics Linked Service Creation
 resource "azurerm_log_analytics_linked_service" "az_log_linked_service" {
-  name = "LOG-LINK-SERVICE-DEMO-VM-May"
+  name = "LOG-LINKED-SERVICE-DEMO-VM-May"
   resource_group_name = azurerm_resource_group.az_rg.name
   workspace_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
   read_access_id = azurerm_automation_account.az_automation_account.id
