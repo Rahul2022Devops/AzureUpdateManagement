@@ -17,6 +17,12 @@ resource "azurerm_subnet" "az_subnet" {
   virtual_network_name = azurerm_virtual_network.az_vnet.name
   address_prefixes     = ["10.0.2.0/24"]
 }
+resource "azurerm_public_ip" "az_publicip" {
+  name                = "PUBLICIP-DEMO-VM-May"
+  location            = "centralindia"
+  resource_group_name = azurerm_resource_group.az_rg.name
+  allocation_method   = "Dynamic"
+}
 # Network Interface Creation
 resource "azurerm_network_interface" "az_interface" {
   name                = "INTERFACE-DEMO-VM-May"
@@ -27,6 +33,7 @@ resource "azurerm_network_interface" "az_interface" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.az_subnet.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.az_publicip.id
   }
 }
 # Network Security Group Creation
@@ -92,6 +99,7 @@ resource "azurerm_automation_account" "az_automation_account" {
   location            = azurerm_resource_group.az_rg.location
   resource_group_name = azurerm_resource_group.az_rg.name
   sku_name = "Basic"
+
 }
 
 # Log Analytics Workspace
@@ -115,13 +123,14 @@ resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
     # product   = "OMSGallery/Updates"
     product = "VMInsights" #explore
   }
-  depends_on = [azurerm_automation_account.az_automation_account]
+  depends_on = [azurerm_log_analytics_workspace.az_log_analytics_workspace]
 }
 # AZ Log Analytics Linked Service Creation
 resource "azurerm_log_analytics_linked_service" "az_log_linked_service" {
   resource_group_name = azurerm_resource_group.az_rg.name
   workspace_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
   read_access_id = azurerm_automation_account.az_automation_account.id
+  depends_on = [azurerm_log_analytics_solution.az_analytcs_solution]
 }
 resource "azurerm_virtual_machine_extension" "az_vm_extension" {
   name                 = "AZ-AGENT-DEMO-VM-May"
