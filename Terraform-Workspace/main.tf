@@ -85,60 +85,60 @@ resource "azurerm_availability_set" "az_av_set" {
 }
 
 
-# # adding these below code for log ananlytics & Update management
-# # Automation Account
-# resource "azurerm_automation_account" "az_automation_account" {
-#   name                = "AUTOMATION-ACCOUNT-DEMO-VM-May"
-#   location            = azurerm_resource_group.az_rg.location
-#   resource_group_name = azurerm_resource_group.az_rg.name
-#   sku_name = "Basic"
-# }
+# adding these below code for log ananlytics & Update management
+# Automation Account
+resource "azurerm_automation_account" "az_automation_account" {
+  name                = "AUTOMATION-ACCOUNT-DEMO-VM-May"
+  location            = azurerm_resource_group.az_rg.location
+  resource_group_name = azurerm_resource_group.az_rg.name
+  sku_name = "Basic"
+}
 
-# # Log Analytics Workspace
-# resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
-#   name                = "LOG-DEMO-VM-May"
-#   location            = azurerm_resource_group.az_rg.location
-#   resource_group_name = azurerm_resource_group.az_rg.name
-#   sku                 = "PerGB2018"
-#   retention_in_days   = 30  # Adjust retention period as needed
-# }
+# Log Analytics Workspace
+resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
+  name                = "LOG-DEMO-VM-May"
+  location            = azurerm_resource_group.az_rg.location
+  resource_group_name = azurerm_resource_group.az_rg.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30  # Adjust retention period as needed
+}
 
-# # Enable Update Management Solution
-# resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
-#   solution_name                  = "LOG-SOLUTION-DEMO-VM-May"
-#   location              = azurerm_resource_group.az_rg.location
-#   resource_group_name   = azurerm_resource_group.az_rg.name
-#   workspace_resource_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
-#   workspace_name        = azurerm_log_analytics_workspace.az_log_analytics_workspace.name
-#   plan {
-#     publisher = "Microsoft"
-#     # product   = "OMSGallery/Updates"
-#     product = "VMInsights" #explore
-#   }
-#   depends_on = [azurerm_automation_account.az_automation_account]
-# }
-# resource "azurerm_virtual_machine_extension" "az_vm_extension" {
-#   name                 = "AZ-AGENT-DEMO-VM-May"
-#   virtual_machine_id   = azurerm_windows_virtual_machine.az_windows_vm.id
-#   #publisher            = "Microsoft.EnterpriseCloud.Monitoring"
-#   publisher            = "Microsoft.Azure.Monitor"
-#   #type                 = "OmsAgentForLinux" #explore
-#   type                 = "DependencyAgentWindows" #explore
-#   type_handler_version = "9.10"
-#   auto_upgrade_minor_version = true
+# Enable Update Management Solution
+resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
+  solution_name                  = "LOG-SOLUTION-DEMO-VM-May"
+  location              = azurerm_resource_group.az_rg.location
+  resource_group_name   = azurerm_resource_group.az_rg.name
+  workspace_resource_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+  workspace_name        = azurerm_log_analytics_workspace.az_log_analytics_workspace.name
+  plan {
+    publisher = "Microsoft"
+    # product   = "OMSGallery/Updates"
+    product = "VMInsights" #explore
+  }
+  depends_on = [azurerm_automation_account.az_automation_account]
+}
+resource "azurerm_virtual_machine_extension" "az_vm_extension" {
+  name                 = "AZ-AGENT-DEMO-VM-May"
+  virtual_machine_id   = azurerm_windows_virtual_machine.az_windows_vm.id
+  publisher            = "Microsoft.EnterpriseCloud.Monitoring"
+  # publisher            = "Microsoft.Azure.Monitor"
+  type                 = "OmsAgentForLinux" #explore
+  # type                 = "DependencyAgentWindows" #explore
+  type_handler_version = "9.10"
+  auto_upgrade_minor_version = true
 
-#   settings = <<SETTINGS
-#     {
-#       "workspaceId": "${azurerm_log_analytics_workspace.az_log_analytics_workspace.workspace_id}"
-#     }
-#   SETTINGS
+  settings = <<SETTINGS
+    {
+      "workspaceId": "${azurerm_log_analytics_workspace.az_log_analytics_workspace.workspace_id}"
+    }
+  SETTINGS
 
-#   protected_settings = <<PROTECTED_SETTINGS
-#     {
-#       "workspaceKey": "${azurerm_log_analytics_workspace.az_log_analytics_workspace.primary_shared_key}"
-#     }
-#   PROTECTED_SETTINGS
-# }
+  protected_settings = <<PROTECTED_SETTINGS
+    {
+      "workspaceKey": "${azurerm_log_analytics_workspace.az_log_analytics_workspace.primary_shared_key}"
+    }
+  PROTECTED_SETTINGS
+}
 
 # Add Virtual Machines to Update Management
 # resource "azurerm_update_management_vm" "az_update_management" {
