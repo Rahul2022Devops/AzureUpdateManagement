@@ -147,6 +147,32 @@ resource "azurerm_virtual_machine_extension" "az_vm_extension" {
   PROTECTED_SETTINGS
 }
 
+resource "azurerm_update_management_schedule" "az_update_management_schedule" {
+  name                    = "AZ-UPDATE-SCHEDULE-DEMO-VM-May"
+  resource_group_name     = azurerm_resource_group.az_rg.name
+  automation_account_name = azurerm_automation_account.az_automation_account.name
+
+  schedule_info {
+    frequency          = "Week"
+    interval           = 1
+    start_time         = "2024-01-01T18:00:00Z"
+    expiry_time        = "2026-01-01T18:00:00Z"
+    time_zone          = "UTC"
+    advanced_schedule {
+      week_days = ["Monday"]
+    }
+  }
+
+  update_configuration {
+    operating_system    = "Windows"
+    duration            = "PT2H"
+    reboot_setting      = "IfRequired"
+    azure_virtual_machine {
+      ids = azurerm_windows_virtual_machine.az_windows_vm.id
+    }
+  }
+}
+
 # Add Virtual Machines to Update Management
 # resource "azurerm_update_management_vm" "az_update_management" {
 #   workspace_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
