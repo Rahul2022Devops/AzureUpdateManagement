@@ -84,77 +84,77 @@ resource "azurerm_windows_virtual_machine" "az_windows_vm" {
   }
 }
 # Availability Set Creation
-resource "azurerm_availability_set" "az_av_set" {
-  name                = "AZ-AV-SET-DEMO-VM-May"
-  location            = azurerm_resource_group.az_rg.location
-  resource_group_name = azurerm_resource_group.az_rg.name
-  managed             = true
-}
+# resource "azurerm_availability_set" "az_av_set" {
+#   name                = "AZ-AV-SET-DEMO-VM-May"
+#   location            = azurerm_resource_group.az_rg.location
+#   resource_group_name = azurerm_resource_group.az_rg.name
+#   managed             = true
+# }
 
 
 # adding these below code for log ananlytics & Update management
 # Automation Account
-resource "azurerm_automation_account" "az_automation_account" {
-  name                = "AUTOMATION-ACCOUNT-DEMO-VM-May"
-  location            = azurerm_resource_group.az_rg.location
-  resource_group_name = azurerm_resource_group.az_rg.name
-  sku_name = "Basic"
+# resource "azurerm_automation_account" "az_automation_account" {
+#   name                = "AUTOMATION-ACCOUNT-DEMO-VM-May"
+#   location            = azurerm_resource_group.az_rg.location
+#   resource_group_name = azurerm_resource_group.az_rg.name
+#   sku_name = "Basic"
 
-}
+# }
 
 # Log Analytics Workspace
-resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
-  name                = "LOG-DEMO-VM-May"
-  location            = azurerm_resource_group.az_rg.location
-  resource_group_name = azurerm_resource_group.az_rg.name
-  sku                 = "PerGB2018"
-  retention_in_days   = 30  # Adjust retention period as needed
-}
+# resource "azurerm_log_analytics_workspace" "az_log_analytics_workspace" {
+#   name                = "LOG-DEMO-VM-May"
+#   location            = azurerm_resource_group.az_rg.location
+#   resource_group_name = azurerm_resource_group.az_rg.name
+#   sku                 = "PerGB2018"
+#   retention_in_days   = 30  # Adjust retention period as needed
+# }
 
 # Enable Update Management Solution
-resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
-  solution_name                  = "LOG-SOLUTION-DEMO-VM-May"
-  location              = azurerm_resource_group.az_rg.location
-  resource_group_name   = azurerm_resource_group.az_rg.name
-  workspace_resource_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
-  workspace_name        = azurerm_log_analytics_workspace.az_log_analytics_workspace.name
-  plan {
-    publisher = "Microsoft"
-    # product   = "OMSGallery/Updates"
-    product = "VMInsights" #explore
-  }
-  depends_on = [azurerm_log_analytics_workspace.az_log_analytics_workspace]
-}
+# resource "azurerm_log_analytics_solution" "az_analytcs_solution" {
+#   solution_name                  = "LOG-SOLUTION-DEMO-VM-May"
+#   location              = azurerm_resource_group.az_rg.location
+#   resource_group_name   = azurerm_resource_group.az_rg.name
+#   workspace_resource_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+#   workspace_name        = azurerm_log_analytics_workspace.az_log_analytics_workspace.name
+#   plan {
+#     publisher = "Microsoft"
+#     # product   = "OMSGallery/Updates"
+#     product = "VMInsights" #explore
+#   }
+#   depends_on = [azurerm_log_analytics_workspace.az_log_analytics_workspace]
+# }
 # AZ Log Analytics Linked Service Creation
-resource "azurerm_log_analytics_linked_service" "az_log_linked_service" {
-  resource_group_name = azurerm_resource_group.az_rg.name
-  workspace_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
-  read_access_id = azurerm_automation_account.az_automation_account.id
-  depends_on = [azurerm_log_analytics_solution.az_analytcs_solution]
-}
-resource "azurerm_virtual_machine_extension" "az_vm_extension" {
-  name                 = "AZ-AGENT-DEMO-VM-May"
-  virtual_machine_id   = azurerm_windows_virtual_machine.az_windows_vm.id
-  publisher            = "Microsoft.Azure.Monitor"
-  # publisher            = "Microsoft.Azure.Monitor"
-  # type                 = "OmsAgentForLinux" #explore
-  type                 = "AzureMonitorWindowsAgent" #explore
-  # type_handler_version = "9.10"
-  type_handler_version = "1.10"
-  # auto_upgrade_minor_version = true
-  automatic_upgrade_enabled = true
-  settings = <<SETTINGS
-    {
-      "workspaceId": "${azurerm_log_analytics_workspace.az_log_analytics_workspace.workspace_id}"
-    }
-  SETTINGS
+# resource "azurerm_log_analytics_linked_service" "az_log_linked_service" {
+#   resource_group_name = azurerm_resource_group.az_rg.name
+#   workspace_id = azurerm_log_analytics_workspace.az_log_analytics_workspace.id
+#   read_access_id = azurerm_automation_account.az_automation_account.id
+#   depends_on = [azurerm_log_analytics_solution.az_analytcs_solution]
+# }
+# resource "azurerm_virtual_machine_extension" "az_vm_extension" {
+#   name                 = "AZ-AGENT-DEMO-VM-May"
+#   virtual_machine_id   = azurerm_windows_virtual_machine.az_windows_vm.id
+#   publisher            = "Microsoft.Azure.Monitor"
+#   # publisher            = "Microsoft.Azure.Monitor"
+#   # type                 = "OmsAgentForLinux" #explore
+#   type                 = "AzureMonitorWindowsAgent" #explore
+#   # type_handler_version = "9.10"
+#   type_handler_version = "1.10"
+#   # auto_upgrade_minor_version = true
+#   automatic_upgrade_enabled = true
+#   settings = <<SETTINGS
+#     {
+#       "workspaceId": "${azurerm_log_analytics_workspace.az_log_analytics_workspace.workspace_id}"
+#     }
+#   SETTINGS
 
-  protected_settings = <<PROTECTED_SETTINGS
-    {
-      "workspaceKey": "${azurerm_log_analytics_workspace.az_log_analytics_workspace.primary_shared_key}"
-    }
-  PROTECTED_SETTINGS
-}
+#   protected_settings = <<PROTECTED_SETTINGS
+#     {
+#       "workspaceKey": "${azurerm_log_analytics_workspace.az_log_analytics_workspace.primary_shared_key}"
+#     }
+#   PROTECTED_SETTINGS
+# }
 
 # resource "azurerm_update_management_schedule" "az_update_management_schedule" {
 #   name                    = "AZ-UPDATE-SCHEDULE-DEMO-VM-May"
